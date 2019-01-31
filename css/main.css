@@ -1,4 +1,14 @@
 .linker {
     text-decoration: none;
-    color: blue !important;
+    color: black;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition-duration: 0.75s;
+    transition-property: opacity;
+    transition-timing-function: ease;
+}
+
+.fade-enter, .fade-leave-active {
+    opacity: 0;
 }

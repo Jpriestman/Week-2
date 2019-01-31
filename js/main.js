@@ -10,7 +10,41 @@
     }
 
     const UsersPageComponent = {
-        template: "<h2>This is the user page</h2>"
+        props: ['id'],
+        template: "#userList",
+
+        //isolate all component data
+
+        data: function() {
+            return {
+                users:[]
+            }
+        },
+
+        created: function() {
+            console.log('user component created');
+
+            //Take the query peraminter from the route and pass it on to the fetchUserData
+            this.fetchUserData(this.id);
+        },
+
+        methods: {
+            fetchUserData(user){
+
+                let url = `./includes/index.php?users=${this.id}`;
+
+                fetch(url)
+                .then(res => res.json())
+                .then(data => this.users = data)
+                .catch(function(error) {
+                    console.error(error);
+                });
+            }
+        }
+    };
+
+    const ErrorPageComponent = {
+        template: "<h2>Page not found : Try Again</h2>"
     }
 
     // routes are the path you're talking through the application
@@ -22,7 +56,8 @@
     const routes = [
         { path: '/', name: 'home', component: HomePageComponent },
         { path: '/contact', name: 'contact', component: ContactComponent },
-        { path: '/users', name: 'users', component: UsersPageComponent }
+        { path: '/users/:id', name: 'users', component: UsersPageComponent, props: true },
+        { path: '/*', name: 'error', component: ErrorPageComponent }
     ]
 
     const router = new VueRouter({
