@@ -1,117 +1,68 @@
-(() => {
-    // Create a component first
+// Import Components
+// exactly like a php include
 
-    const HomePageComponent = {
-        template: "<h2>This is my homepage</h2>"
-    }
+import LoginComponent from '../js/modules/LoginComponent.js';
+import UsersComponent from '../js/modules/UsersComponent.js';
 
-    const ContactComponent = {
-        template: "<h2>This is the Contact page</h2>"
-    }
+// routes are the path you're talking through the application
+// www.google.ca is a route; its the route to the homepage
+// www.sumpinsumpin/contact is the route to the contact page, ect
+// each route gets mapped to a component that you define 
+// and that component gets rendered in the <router-view> element
 
-    const UsersPageComponent = {
-        props: ['id'],
-        template: "#userList",
+const routes = [
+    { path: '/', redirect: { name: "login" } },
+    { path: '/login', name: 'login', component: LoginComponent },
+    { path: '/users', name: 'users', component: UsersComponent }
+]
 
-        //isolate all component data
+const router = new VueRouter({
+    routes
+});
 
-        data: function() {
-            return {
-                users:[]
-            }
-        },
+const vm = new Vue({
 
-        created: function() {
-            console.log('user component created');
+    data: { 
+        testmessage: "sup",
 
-            //Take the query peraminter from the route and pass it on to the fetchUserData
-            this.fetchUserData(this.id);
-        },
+        authenticated: false,
 
-        methods: {
-            fetchUserData(user){
-
-                let url = `./includes/index.php?users=${this.id}`;
-
-                fetch(url)
-                .then(res => res.json())
-                .then(data => this.users = data)
-                .catch(function(error) {
-                    console.error(error);
-                });
-            }
+        mockAccount: {
+            username: "usher4663",
+            password: "password"
         }
-    };
+    },
 
-    const ErrorPageComponent = {
-        template: "<h2>Page not found : Try Again</h2>"
+    methods: {
+        calledOnParent(){
+            console.log("This method lives in the main Vm and was called from a component");
+        },
+
+        setAuthenticated(status) {
+            this.authenticated = status;
+        },
+
+        logout() {
+            this.authenticated = false;
+        }
+    },
+
+    created: function() {
+        console.log("Logged from Vue Instance");
+    },
+
+    router: router
+}).$mount("#app");
+
+router.beforeEach((to, from, next) => {
+    console.log('router guard fired!');
+
+    if (vm.authenticated == false) {
+        next("/login");
+    } else {
+        next();
     }
 
-    // routes are the path you're talking through the application
-    // www.google.ca is a route; its the route to the homepage
-    // www.sumpinsumpin/contact is the route to the contact page, ect
-    // each route gets mapped to a component that you define 
-    // and that component gets rendered in the <router-view> element
-
-    const routes = [
-        { path: '/', name: 'home', component: HomePageComponent },
-        { path: '/contact', name: 'contact', component: ContactComponent },
-        { path: '/users/:id', name: 'users', component: UsersPageComponent, props: true },
-        { path: '/*', name: 'error', component: ErrorPageComponent }
-    ]
-
-    const router = new VueRouter({
-        routes
-    });
-
-    //const UserComponent = {
-    //    props: ['name', 'role'],
-    //
-    //    template: "#userstemplate",
-    //
-    //       created: function() {
-    //          console.log("I'm Aliive");
-    //    },
-//
-    //    methods: {
-    //        logFromChild() {
-    //            console.log("logged from the component");
-    //        },
-//
-    //        passEvent() {
-    //            this.$emit('shoutup');
-    //        }
-    //    }
-   // }
-//
-    // Then your vue Instance
-
-    const vm = new Vue({
-        el: "#app",
-
-     
-        data: { 
-            testmessage: "sup"
-        },
-
-        methods: {
-            calledOnParent(){
-                console.log("This method lives in the main Vm and was called from a component");
-            }
-        },
-
-        created: function() {
-            console.log("Logged from Vue Instance");
-        },
-
-        components: {
-            'homepagecomponent' : HomePageComponent,
-            'contactcomponent' : ContactComponent,
-            'userscomponent' : UsersPageComponent
-        },
-
-        router: router
-    });
 
 
-})()
+});

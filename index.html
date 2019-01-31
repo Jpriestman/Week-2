@@ -11,83 +11,18 @@
 </head>
 <body>
     <main>
-
         <div id="app">
-            <!-- This is Vue's Navigation Element -->
-            <router-link :to="{ path: '/'}" class="linker">Home</router-link>
-            <router-link :to="{ path: 'contact'}">Contact</router-link>
-            <router-link :to="{ path: 'users/1'}">Users</router-link>
-
+            <router-link v-if="authenticated" to="/login" v-on:click.native="logout()">Logout</router-link>
 
             <!-- Components Get Rendered Here -->
             <transition name="fade" mode="out-in">
-                <router-view></router-view>
+                <router-view @authenticated="setAuthenticated"/>
             </transition>
         </div>
     </main>
 
-    <!-- Templates Go Here -->
-    <template id="userList">
-        <div>
-            <h3>Current User:
-                <span v-if="users.length > 0">
-                    {{ users[0].first_name }} {{ users[0].last_name }}
-                </span>
-            </h3>
-        </div>
-    </template>
-
-
-   <script src="js/main.js"></script>
+    <!--"Type Module" will allow the page to know we will be adding modules  -->
+   <script type="module" src="js/main.js"></script>
 
 </body>
 </html>
-
-
-
-       <!--
-        <h2>User Data for My App</h2>
-        <hr>
-        <article>
-            <h4 class="hidden"></h4>
-            <h5>something somethin</h5>
-            <p>
-                Lorem Ipsum Goes Here
-            </p>
-            <p>
-                Lorem Ipsum Goes Here
-            </p>
-        </article>
-
-        <div id="app">
-            <activeusers name="Jordan" role="I am the best role" @shoutup="calledOnParent">
-                <h4>Active User Data:</h4>
-            </activeusers>
-
-            <div id="app">
-                    <activeusers name="Justin" role="I try to be cool">
-                        <h4>Active User Data:</h4>
-                    </activeusers>
-
-        </div>
-
-
-
-       -->
-
-          <!-- Component Template -->
-
-   <!--
-
-    <template id="userstemplate">
-       <div>
-           <slot></slot>
-           <p>{{ name }}</p>
-           <p>{{ role }}</p>
-           <hr>
-           <button v-on:click="logFromChild">Clicky Click</button>
-           <button v-on:click="passEvent">Run a Main View Model Function </button>
-       </div>
-   </template>
-
-   -->

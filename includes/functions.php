@@ -3,6 +3,23 @@
     include 'connect.php';
 
 
+    function validate_login($pdo, $username, $password) {
+        $query = "SELECT * FROM users WHERE first_name ='$user'";
+
+        $get_user = $pdo->query($query);
+        $results = array();
+
+        while($row = $get_user->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['password'] == $password) {
+                $row['password'] = 'XXXXXXXXXX';
+                $results[] = $row;
+            } else {
+                $results[] = "false";
+            }
+        }    
+        return $results; 
+    }
+
     function get_single_user($pdo, $user) {
         $query = "SELECT * FROM users WHERE id='$user'";
 

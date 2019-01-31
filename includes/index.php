@@ -3,8 +3,13 @@
 include 'functions.php';
 
 // remember to use the technique pan is shwoing you to clean up user input (prepared statements ect...)
+//
 
-if (isset($_GET['users'])) {
+// Do authentication (password validation) first 
+if (isset($_GET['username'])){
+    $data = validate_login($conn, $_GET['username'], $_GET['password']);
+    echo json_encode($data);
+}else if (isset($_GET['users'])) {
     $data = get_single_user($conn, $_GET['users']);
     echo json_encode($data);
 } else{
